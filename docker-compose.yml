@@ -1,0 +1,30 @@
+version: "3"
+services:
+  db:
+    restart: on-failure:10
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=PlassBird9000!
+    ports:
+      - "1433:1433"
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    links:
+      - db
+    depends_on:
+      - db
+    environment:
+      - SA_PASSWORD=PlassBird9000!
+      - DB_NAME=mydb
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./app:/app
+
+networks:
+  proxynet:
+    name: ai_net
+

